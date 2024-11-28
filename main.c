@@ -11,25 +11,27 @@
 #define GREEN 0x1fe04c     // Color Green
 #define TURQUOISE 0x05ffff // Color Turquoise
 
-#define width 1720
-#define height 1000
+#define WINDOW_WIDTH 1720
+#define WINDOW_HEIGHT 1000
 
-#define active_life {30, 40, 10, 10}
+#define CELL_WIDTH 30
+#define LINE_WIDTH 2
 
 
 
 
-void draw_grid(SDL_Surface* surface , int cell_width , int columns , int rows)
+
+void draw_grid(SDL_Surface* surface ,int columns , int rows)
 {
-    for (int i=0; i<rows; i++)
+    for (int i=0; i<rows+1 ; i++)
     {
-        SDL_Rect row_line = {0 ,i*cell_width, width ,1};
+        SDL_Rect row_line = { 0 , i * CELL_WIDTH, WINDOW_WIDTH , 1 };
 
-        SDL_FillRect(surface , &row_line, GREEN);
+        SDL_FillRect(surface , &row_line , GREEN);
     }
-    for (int i=0; i<columns; i++)
+    for (int i=0; i<columns+1 ; i++)
     {
-        SDL_Rect col_line = {i*cell_width, 0 , 1, width };
+        SDL_Rect col_line = { i * CELL_WIDTH, 0 , 1, WINDOW_HEIGHT };
 
         SDL_FillRect(surface, &col_line , GREEN);
     }
@@ -37,40 +39,70 @@ void draw_grid(SDL_Surface* surface , int cell_width , int columns , int rows)
 
 void draw_cell(SDL_Surface* surface , int cell_x , int cell_y)
 {
-    printf("no");
+    int pixel_x = cell_x * CELL_WIDTH;
+    int pixel_y = cell_y * CELL_WIDTH;
+    
+    SDL_Rect cell_rect = {pixel_x,pixel_y,CELL_WIDTH,CELL_WIDTH};
+    SDL_FillRect(surface, &cell_rect, WHITE);
 }
+
+
+
+
+
+
+
+
 
 int main()
 {
     SDL_Init(SDL_INIT_VIDEO);
+    SDL_Event event;
 
-    char *window_title = "Game of Life";
+    char *window_title = "Game of Life";    
     
-    int cell_width = 10;
-    int columns = width / cell_width;
-    int rows = height / cell_width;
+    int columns = WINDOW_WIDTH / CELL_WIDTH;
+    int rows = WINDOW_HEIGHT / CELL_WIDTH;
 
-    int cell_x = 10;
-    int cell_y = 60;
-
-
-    SDL_Window *window = SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
+    SDL_Window *window = SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     SDL_Surface *surface = SDL_GetWindowSurface(window);
 
-    SDL_Rect life ={30, 40, 10, 10};
+    draw_grid(surface  ,  columns  ,  rows);
     
-
-    draw_grid(surface , cell_width, columns,rows);
-    draw_cell(surface, cell_x , cell_y);
-    
-    //SDL_FillRect(surface, &life, WHITE);
 
     // Update the window surface to display the rectangle
-    SDL_UpdateWindowSurface(window);
+
+    int exit_flag = 0;
+
+    while(!exit_flag)
+    {
+        while(SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+            {
+                exit_flag = 1;
+            }
+            else if(event.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if(event.button.button == SDL_BUTTON_LEFT)
+                {
+                    int mouse_x = event.button.x;
+                    int mouse_y = event.button.y;
+
+                    int cell_x = mouse_x / CELL_WIDTH;
+                    int cell_y = mouse_y / CELL_WIDTH;
+
+                    draw_cell(surface, cell_x, cell_y);
+
+                    SDL_UpdateWindowSurface(window);
+                }
+            }
+        }
+    }
 
     
-    SDL_Delay(5000);
-
+    
+    
     // Clean up SDL resources
     SDL_DestroyWindow(window);
     SDL_Quit();
