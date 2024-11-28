@@ -1,7 +1,13 @@
+
+// X PAUSES
+// Z UNPAUSES
+// LEFT CLICK TO CREATE / KILL CELL
+
 #define SDL_MAIN_HANDLED // Tell SDL to use main function
 
 #include <SDL2/SDL.h>
 #include <stdio.h>
+
 
 #define WHITE 0xffffffff // Color White
 #define BLACK 0x00000000 // Color Black
@@ -10,7 +16,7 @@
 #define WINDOW_WIDTH 1720
 #define WINDOW_HEIGHT 1000
 
-#define CELL_WIDTH 30
+#define CELL_WIDTH 15
 #define LINE_WIDTH 2
 
 #define ALIVE 1
@@ -212,3 +218,4 @@ int main()
 
     return 0;
 }
+
