@@ -31,12 +31,12 @@ void draw_grid(SDL_Surface *surface, int columns, int rows)
     for (int i = 0; i <= rows; i++)
     {
         SDL_Rect row_line = {0, i * CELL_WIDTH, WINDOW_WIDTH, LINE_WIDTH};
-        SDL_FillRect(surface, &row_line, GREEN);
+        SDL_FillRect(surface, &row_line, WHITE);
     }
     for (int i = 0; i <= columns; i++)
     {
         SDL_Rect col_line = {i * CELL_WIDTH, 0, LINE_WIDTH, WINDOW_HEIGHT};
-        SDL_FillRect(surface, &col_line, GREEN);
+        SDL_FillRect(surface, &col_line, WHITE);
     }
 }
 
